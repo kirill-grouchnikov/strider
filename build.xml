@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="strider" default="all">
+
+	<!-- Compiler options -->
+	<property name="compiler.debug" value="on" />
+	<property name="compiler.generate.no.warnings" value="off" />
+	<property name="compiler.args" value="" />
+	<property name="compiler.max.memory" value="128m" />
+	<patternset id="compiler.excluded" />
+	<patternset id="compiler.resources">
+		<include name="**/?*.properties" />
+		<include name="**/?*.xml" />
+		<include name="**/?*.gif" />
+		<include name="**/?*.png" />
+		<include name="**/?*.jpeg" />
+		<include name="**/?*.jpg" />
+		<include name="**/?*.html" />
+		<include name="**/?*.dtd" />
+		<include name="**/?*.tld" />
+		<include name="**/?*.ttf" />
+		<include name="**/?*.svg" />
+	</patternset>
+	<!-- JDK definitions -->
+
+	<property name="jdk.home.java_version_1.6.0" value="C:/Program Files/Java/jdk1.6.0_02" />
+	<path id="jdk.classpath.java_version_1.6.0">
+		<fileset dir="${jdk.home.java_version_1.6.0}">
+			<include name="jre/lib/charsets.jar" />
+			<include name="jre/lib/deploy.jar" />
+			<include name="jre/lib/javaws.jar" />
+			<include name="jre/lib/jce.jar" />
+			<include name="jre/lib/jsse.jar" />
+			<include name="jre/lib/plugin.jar" />
+			<include name="jre/lib/rt.jar" />
+			<include name="jre/lib/ext/dnsns.jar" />
+			<include name="jre/lib/ext/localedata.jar" />
+			<include name="jre/lib/ext/sunjce_provider.jar" />
+			<include name="jre/lib/ext/sunpkcs11.jar" />
+		</fileset>
+	</path>
+
+	<property name="project.jdk.home" value="${jdk.home.java_version_1.6.0}" />
+	<property name="project.jdk.classpath" value="jdk.classpath.java_version_1.6.0" />
+	<!-- Project Libraries -->
+	<!-- Global Libraries -->
+
+
+	<dirname property="module.strider.basedir" file="${ant.file}" />
+
+	<property name="compiler.args.strider" value="${compiler.args}" />
+
+	<property name="strider.build.dir" value="${module.strider.basedir}/build/" />
+	<property name="strider.output.dir" value="${strider.build.dir}/classes" />
+	<property name="strider.drop.dir" value="${module.strider.basedir}/drop" />
+	<property name="strider.lib.dir" value="${module.strider.basedir}/lib" />
+	<property name="strider.src.dir" value="${module.strider.basedir}/src/" />
+	<property name="strider.version" value="1.0dev Alento" />
+
+	<path id="strider.module.bootclasspath">
+		<!-- Paths to be included in compilation bootclasspath -->
+	</path>
+
+	<property name="module.jdk.home.strider" value="${project.jdk.home}" />
+	<property name="module.jdk.classpath.strider" value="${project.jdk.classpath}" />
+
+	<path id="strider.module.classpath">
+		<path refid="${module.jdk.classpath.strider}" />
+		<pathelement location="${strider.lib.dir}/forms-1.1.0.jar" />
+		<pathelement location="${strider.lib.dir}/substance.jar" />
+	</path>
+
+	<patternset id="excluded.from.module.strider" />
+
+	<patternset id="excluded.from.compilation.strider">
+		<patternset refid="excluded.from.module.strider" />
+		<patternset refid="compiler.excluded" />
+	</patternset>
+
+	<path id="strider.module.sourcepath">
+		<dirset dir="${strider.src.dir}">
+			<include name="org/jvnet/strider" />
+		</dirset>
+	</path>
+
+	<path id="strider.module.testsourcepath">
+		<dirset dir="${strider.src.dir}">
+			<include name="test" />
+		</dirset>
+	</path>
+
+	<target name="compile.module.strider" depends="compile.module.strider.production,compile.module.strider.tests" description="compile module strider" />
+
+	<target name="compile.module.strider.production" description="compile module strider production classes">
+		<mkdir dir="${strider.output.dir}" />
+		<javac destdir="${strider.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.strider}/bin/javac">
+			<compilerarg line="${compiler.args.strider}" />
+			<bootclasspath refid="strider.module.bootclasspath" />
+			<classpath refid="strider.module.classpath" />
+			<src refid="strider.module.sourcepath" />
+			<patternset refid="excluded.from.compilation.strider" />
+		</javac>
+		<copy todir="${strider.output.dir}">
+			<fileset dir="${strider.src.dir}">
+				<patternset refid="compiler.resources" />
+				<type type="file" />
+				<patternset refid="excluded.from.compilation.strider" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile.module.strider.tests" description="compile module strider test classes" unless="skip.tests">
+		<mkdir dir="${strider.output.dir}" />
+		<javac destdir="${strider.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.strider}/bin/javac">
+			<compilerarg line="${compiler.args.strider}" />
+			<bootclasspath refid="strider.module.bootclasspath" />
+			<classpath refid="strider.module.classpath" />
+			<src refid="strider.module.testsourcepath" />
+			<patternset refid="excluded.from.compilation.strider" />
+		</javac>
+		<copy todir="${strider.output.dir}/test">
+			<fileset dir="${strider.src.dir}/test">
+				<patternset refid="compiler.resources" />
+				<type type="file" />
+				<patternset refid="excluded.from.compilation.strider" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean.module.strider" description="cleanup module">
+		<delete dir="${strider.output.dir}" />
+	</target>
+
+	<target name="init" description="Build initialization">
+		<!-- Perform any build initialization in this target -->
+	</target>
+
+	<target name="jar-bin" description="create runtime jar">
+		<mkdir dir="${strider.drop.dir}" />
+		<delete file="${strider.drop.dir}/strider.jar" />
+		<tstamp>
+			<format property="build.time" pattern="MMMM d, yyyy hh:mm:ss z" />
+		</tstamp>
+		<jar compress="true" destfile="${strider.drop.dir}/strider.jar">
+			<fileset dir="${strider.output.dir}/" excludes="test/**" />
+			<fileset dir="${module.strider.basedir}/" includes="resources/**" />
+			<manifest>
+				<attribute name="Strider-Version" value="${strider.version}" />
+				<attribute name="Strider-BuildStamp" value="${build.time}" />
+			</manifest>
+		</jar>
+		<copy file="${strider.drop.dir}/strider.jar" todir="${module.strider.basedir}/www/webstart" />
+	</target>
+
+	<target name="jar-bin-tst" description="create test runtime jar">
+		<delete file="${strider.drop.dir}/strider-tst.jar" />
+		<jar destfile="${strider.drop.dir}/strider-tst.jar">
+			<fileset dir="${strider.output.dir}/" includes="test/** docrobot/**" />
+			<manifest>
+				<attribute name="Strider-Version" value="${strider.version}" />
+				<attribute name="Strider-BuildStamp" value="${build.time}" />
+				<attribute name="Main-Class" value="test.SampleFrame" />
+				<attribute name="Class-Path" value="strider.jar ../lib/forms-1.1.0.jar ../lib/substance.jar" />
+			</manifest>
+		</jar>
+		<copy file="${strider.drop.dir}/strider-tst.jar" todir="${module.strider.basedir}/www/webstart" />
+	</target>
+
+	<target name="distro" description="create distribution">
+		<tstamp>
+		</tstamp>
+		<delete file="${module.strider.basedir}/strider-all.zip" />
+		<zip destfile="${module.strider.basedir}/strider-all.zip" compress="true">
+			<fileset dir="${module.strider.basedir}">
+				<include name="drop/**" />
+				<include name="docs/**" />
+				<include name="lib/**" />
+				<include name="src/**" />
+				<include name="www/index.html" />
+				<include name="www/docs/**" />
+				<include name="www/images/**" />
+				<include name="build.xml" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="timestamp">
+		<tstamp>
+			<format property="build.time" pattern="MMMM d, yyyy hh:mm:ss z" />
+		</tstamp>
+		<echo message="Beginning build: ${build.time}" />
+		<echo message="Java home: ${java.home}" />
+		<echo message="Java version: ${ant.java.version}" />
+		<echo message="Ant version: ${ant.version}" />
+	</target>
+
+	<target name="jar" depends="jar-bin, jar-bin-tst" description="create all jars" />
+
+	<target name="clean" depends="clean.module.strider" description="cleanup all" />
+
+	<target name="all" depends="timestamp, init, clean, compile.module.strider, jar" description="build all" />
+</project>

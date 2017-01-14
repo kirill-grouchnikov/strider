@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Strider - main page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<h1>Strider </h1>
+
+<p>This project aims to provide ripple-based effects for Swing
+applications. Based on the 
+<a href="http://www.falstad.com/ripple/">original code</a> by Paul Falstad
+(warning - opens a popup window with an applet), it provides a custom
+glass pane that can be installed and configured in the following way:</p>
+
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>private&nbsp;</b></font><font color="#000000">RippleGlassPane&nbsp;rgp;</font><br/><br/>
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">RippleGlassPane</font><font color="#000000">(</font><font color="#000000">getRootPane</font><font color="#000000">())</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp.ignoreClicksOn</font><font color="#000000">(</font><font color="#000000">JTextComponent.class,&nbsp;</font><font color="#7f0055"><b>true</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp.markAsMedium</font><font color="#000000">(</font><font color="#000000">AbstractButton.class,&nbsp;</font><font color="#7f0055"><b>true</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp.markAsWall</font><font color="#000000">(</font><font color="#000000">JTextComponent.class,&nbsp;</font><font color="#7f0055"><b>true</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp.setOpaque</font><font color="#000000">(</font><font color="#7f0055"><b>false</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.setGlassPane</font><font color="#000000">(</font><font color="#7f0055"><b>this</b></font><font color="#000000">.rgp</font><font color="#000000">)</font><font color="#000000">;</font></code>
+    
+<p>The following <code>RippleGlassPane</code> methods can be used in the application code:</p>
+
+<ul>
+<li><code>ignoreClicksOn</code> - mouse clicks on the specified components will not result
+in a ripple wave.</li>
+<li><code>markAsWall</code> - bounds of the specified components will be marked as walls,
+resulting in ripple waves bouncing off.</li>
+<li><code>markAsMedium</code> - area of the specified components will be marked as medium,
+resulting in ripple waves propagating slower.</li>
+</ul>
+
+</body></html>
+
+</body>
+</html>
+
